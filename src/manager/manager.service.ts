@@ -3,8 +3,9 @@ import { PasswordService, PrismaService, selectFieldsOfManager } from '../core';
 import { CreateManagerDto, UpdateManagerDto } from './dto';
 import { IManager, IStatistic } from './interface';
 import { isEmail } from 'class-validator';
-import { EStatus, OrderService } from '../order';
+import { EStatus, ICustomPaginated, OrderService } from '../order';
 import { User } from '@prisma/client';
+import { PaginateQuery } from 'nestjs-paginate';
 
 @Injectable()
 export class ManagerService {
@@ -14,11 +15,34 @@ export class ManagerService {
     private readonly orderService: OrderService,
   ) {}
 
-  async getManagersList(): Promise<IManager[]> {
-    return this.prismaService.user.findMany({
+  async getManagersList(
+    query?: PaginateQuery,
+  ): Promise<ICustomPaginated<IManager>> {
+    const { page = 1, limit = 10 } = query;
+
+    const skip = (page - 1) * limit;
+    const take = limit;
+
+    const totalCount = await this.prismaService.user.count({
       where: { role: 'manager' },
-      select: selectFieldsOfManager,
     });
+
+    const managers = await this.prismaService.user.findMany({
+      select: selectFieldsOfManager,
+      skip,
+      take,
+      where: { role: { equals: 'manager' } },
+    });
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return {
+      data: managers,
+      page,
+      limit,
+      totalCount,
+      totalPages,
+    };
   }
 
   async getManagerById(id: string): Promise<IManager> {

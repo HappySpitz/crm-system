@@ -58,7 +58,7 @@ export class OrderController {
   })
   @ApiQuery({
     name: 'filter.name',
-    example: 'ax',
+    example: 'max',
     type: String,
     required: false,
     description: 'Filter by value',

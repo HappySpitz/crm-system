@@ -11,8 +11,6 @@ export class OrderEntity {
   course: string;
   course_type: string;
   course_format: string;
-  sum: number;
-  already_paid: number;
   start_date: Date;
   end_date: Date;
   status: string;

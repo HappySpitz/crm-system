@@ -26,7 +26,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AdminController, AdminModule, AdminService } from './admin';
 import { PassportModule } from '@nestjs/passport';
 import { ManagerController, ManagerModule, ManagerService } from './manager';
-import {ScheduleModule} from "@nestjs/schedule";
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -63,7 +63,7 @@ import {ScheduleModule} from "@nestjs/schedule";
     AdminModule,
     TokenModule,
     MailModule,
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
   ],
   controllers: [
     AppController,
@@ -86,7 +86,7 @@ import {ScheduleModule} from "@nestjs/schedule";
     ActivateStrategy,
     TokenService,
     ForgotStrategy,
-    CronJobsService
+    CronJobsService,
   ],
 })
 export class AppModule {}

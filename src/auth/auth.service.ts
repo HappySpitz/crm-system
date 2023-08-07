@@ -76,8 +76,8 @@ export class AuthService {
     const tokenPair = await this.tokenService.generateTokenPair(id);
 
     await this.prismaService.token.create({
-        data: { userId: id, createdAt: new Date(), ...tokenPair },
-      })
+      data: { userId: id, createdAt: new Date(), ...tokenPair },
+    });
 
     return tokenPair;
   }

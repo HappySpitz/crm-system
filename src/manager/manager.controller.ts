@@ -2,6 +2,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -21,12 +22,11 @@ import { ManagerService } from './manager.service';
 import { CreateManagerDto, UpdateManagerDto } from './dto';
 import { TrimPipe } from '../core';
 import { AdminAuthGuard } from '../admin';
-import { AuthGuard } from '@nestjs/passport';
-import {User} from "../auth/user.decorator";
+import { Paginate, PaginateQuery } from 'nestjs-paginate';
 
 @ApiTags('Managers')
 @Controller('managers')
-@UseGuards(AuthGuard('access'))
+@UseGuards(AdminAuthGuard)
 @ApiBearerAuth()
 export class ManagerController {
   constructor(private readonly managerService: ManagerService) {}
@@ -34,17 +34,33 @@ export class ManagerController {
   @Get()
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @UseGuards(AdminAuthGuard)
-  async getManagersList(@Req() req: any, @Res() res: any) {
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    example: '1',
+    required: false,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'limit',
+    example: '10',
+    type: Number,
+    required: false,
+    description: 'Number of items per page',
+  })
+  async getManagersList(
+    @Req() req: any,
+    @Res() res: any,
+    @Paginate() query?: PaginateQuery,
+  ) {
     return res
       .status(HttpStatus.OK)
-      .json(await this.managerService.getManagersList());
+      .json(await this.managerService.getManagersList(query));
   }
 
   @ApiResponse({ status: 201, description: 'Created' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiBody({ type: CreateManagerDto })
-  @UseGuards(AdminAuthGuard)
   @Post('create')
   async createManager(
     @Req() req: any,
@@ -59,7 +75,6 @@ export class ManagerController {
   @ApiParam({ name: 'managerId', required: true })
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @UseGuards(AdminAuthGuard)
   @Get(':managerId')
   async getOrderById(
     @Req() req: any,
@@ -74,7 +89,6 @@ export class ManagerController {
   @ApiParam({ name: 'managerId', required: true })
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @UseGuards(AdminAuthGuard)
   @Get(':managerId/statistic')
   async getStatisticOnManager(
     @Req() req: any,
@@ -90,7 +104,6 @@ export class ManagerController {
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @ApiBody({ type: UpdateManagerDto })
-  @UseGuards(AdminAuthGuard)
   @Patch(':managerId')
   async updateManager(
     @Req() req: any,
