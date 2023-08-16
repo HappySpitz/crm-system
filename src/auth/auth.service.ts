@@ -39,6 +39,13 @@ export class AuthService {
         );
       }
 
+      if (manager.is_active === false && manager.password === null) {
+        throw new HttpException(
+            'You cannot log in because your account is not activated. Please activate your account',
+            HttpStatus.FORBIDDEN,
+        );
+      }
+
       await this.managerService.updateManager(manager.id, {
         last_login: new Date(),
       });
