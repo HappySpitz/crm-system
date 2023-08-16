@@ -160,6 +160,13 @@ export class AuthService {
   async sendForgotPasswordToken(email: string): Promise<void> {
     const manager = await this.managerService.getManagerByIdOrEmail(email);
 
+    if (manager.is_active === false && manager.password === null) {
+      throw new HttpException(
+        "To get started, you need to activate your account and set up a password. After activation, you'll be able to secure your account with a new password.",
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const forgotPasswordToken = await this.tokenService.generateActionToken(
       manager.id,
       EActionTokenType.forgot,
