@@ -1,0 +1,737 @@
+{
+	"info": {
+		"_postman_id": "26f76830-2df0-45ec-8052-a0a00fced089",
+		"name": "CRM-system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25943960",
+		"_collection_link": "https://cloudy-flare-511148.postman.co/workspace/Team-Workspace~f034d81d-2d77-4aa2-8016-93625b8fd081/collection/25943960-26f76830-2df0-45ec-8052-a0a00fced089?action=share&creator=25943960&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MGNlYTk4ZjljODRkNzU3MWM0NyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg5MzQ4MDgwLCJleHAiOjE2ODkzNDg2ODB9.JNFdBJq7SPRRPmGiRI9weaDkC9fKS0J5E3pps824e34",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/orders?filter.manager=Kristina",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "filter.course_type",
+									"value": "premium",
+									"disabled": true
+								},
+								{
+									"key": "filter.group",
+									"value": "sep-2023",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "age:desc",
+									"disabled": true
+								},
+								{
+									"key": "filter.name",
+									"value": "jhon",
+									"disabled": true
+								},
+								{
+									"key": "filter.start_date",
+									"value": "2021-01-01",
+									"disabled": true
+								},
+								{
+									"key": "filter.end_date",
+									"value": "2021-12-29",
+									"disabled": true
+								},
+								{
+									"key": "filter.manager",
+									"value": "Kristina"
+								},
+								{
+									"key": "filter.status",
+									"value": "New",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MTEwYTk4ZjljODRkNzU3MWM0OCIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjkyMzcxMzU1LCJleHAiOjE2OTIzNzE5NTV9.N11mJbOR72441ogYuDyVHNrXAlOP55BJDUBK4gtr3dk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/orders/6492d840a0a80ab264952660",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"6492d840a0a80ab264952660"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by id",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3ODU1NTg3LCJleHAiOjE2ODc4NTYxODd9.SsZ-PfbIJ55l--p2mSODLuGqM2WOt4Vz72yRoyzNx_8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"group\": \"oktober\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/6492d840a0a80ab264952651",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"6492d840a0a80ab264952651"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by id / add comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3Nzk0NTA1LCJleHAiOjE2ODc3OTUxMDV9.8ckxnfJ9m7rihnEcRMqN-K_Ic02UZsQUkenIdZ4Ug5o",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"hello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/6492d840a0a80ab264952662/comment",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"6492d840a0a80ab264952662",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orders / create group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg4MDQzMzU0LCJleHAiOjE2ODgwNDM5NTR9.4dr8k5wSSa9VfZZSRtS5LM-Wc6ZN4umHbPaYGvaKaLc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"      \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/create/group",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"create",
+								"group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order by id / comments",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3NjAyOTU0LCJleHAiOjE2ODc2MDM1NTR9.I60CEVOrkLkzFT5QB6XcOjz_-V7xvFluRDIjkKKxdnE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"hello friend!      \"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/6492d840a0a80ab264952659/comments",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"6492d840a0a80ab264952659",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orders / groups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3NTkyNzY3LCJleHAiOjE2ODc1OTMzNjd9.HfBvm9kQLfAOuyx887enYp_p7TbwBhpR86nozAPglJc",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"hello friend!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/groups",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orders / statistic",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3NTMxMTQwLCJleHAiOjE2ODc1MzE3NDB9.GPGghiEyy5egbFBjdTP8MLQyFGtOLt57ya0_uXRyMgo",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"hello friend!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/statistic",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"statistic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orders / manager",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg5MjQ1OTY3LCJleHAiOjE2ODkyNDY1Njd9.o-QFdWVnueYowgi3sztY-IW2BrpPqBe1RuDwUpWIW_g",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"comment\": \"hello friend!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/orders/manager",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"manager"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"tatarinkristina2002@gmail.com\",\n    \"password\": \"Password123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"tatarinkristina2002@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/activate",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"activate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot / password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"tatarinkristina2002@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/forgot/password",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"forgot",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change / password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFkNzczNDFkOGNjYWVjODU4ZWFkYyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg4MTIxMzc3LCJleHAiOjE2ODgxMjE5Nzd9.Hc-BTDvs89folTDcIILziFRwFTIoOStOhlw_l0WUG4Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"oldPassword\": \"Password123@\",\n    \"newPassword\": \"PAssword123@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/change/password",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"change",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "activate / token",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFkNzczNDFkOGNjYWVjODU4ZWFkYyIsInN0cmF0ZWd5IjoiYWN0aXZhdGUiLCJpYXQiOjE2ODc5NDM1ODEsImV4cCI6MTY4ODU0ODM4MX0.4unKLqyIulrTmYm_pU3beqoOvTsCLfF7xnxLxDExnfQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"Rozkovbas123@$\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/activate?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFkNzczNDFkOGNjYWVjODU4ZWFkYyIsInN0cmF0ZWd5IjoiYWN0aXZhdGUiLCJpYXQiOjE2ODc5NDI0MzYsImV4cCI6MTY4ODU0NzIzNn0.8zJIhZah3pxn5IUrA-n9JhEl4sopS9hKRw1Gprw0vDM",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"activate"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFkNzczNDFkOGNjYWVjODU4ZWFkYyIsInN0cmF0ZWd5IjoiYWN0aXZhdGUiLCJpYXQiOjE2ODc5NDI0MzYsImV4cCI6MTY4ODU0NzIzNn0.8zJIhZah3pxn5IUrA-n9JhEl4sopS9hKRw1Gprw0vDM"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot / password / token",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OWFkNzczNDFkOGNjYWVjODU4ZWFkYyIsInN0cmF0ZWd5IjoiYWN0aXZhdGUiLCJpYXQiOjE2ODc5NDM1ODEsImV4cCI6MTY4ODU0ODM4MX0.4unKLqyIulrTmYm_pU3beqoOvTsCLfF7xnxLxDExnfQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"Rozkovbas12345@\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/forgot/password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MTEwYTk4ZjljODRkNzU3MWM0OCIsInN0cmF0ZWd5IjoiZm9yZ290IiwiaWF0IjoxNjkxNDI2ODAxLCJleHAiOjE2OTE0Mjg2MDF9.cvVBgbSpfQS2l1Es8K3ZNjc4zstZ8buuDDo_jPkwgrc",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"forgot",
+								"password"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MTEwYTk4ZjljODRkNzU3MWM0OCIsInN0cmF0ZWd5IjoiZm9yZ290IiwiaWF0IjoxNjkxNDI2ODAxLCJleHAiOjE2OTE0Mjg2MDF9.cvVBgbSpfQS2l1Es8K3ZNjc4zstZ8buuDDo_jPkwgrc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MTEwYTk4ZjljODRkNzU3MWM0OCIsInN0cmF0ZWd5IjoicmVmcmVzaCIsImlhdCI6MTY5MDQ0NjE0MSwiZXhwIjoxNjkwNDQ3MzQxfQ.6TSCYWZfYd_kmdmCI08AOaAxPpAlGZa5ePux3v0jtdQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/refresh",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "admin",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/admin/create",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"admin",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "manager",
+			"item": [
+				{
+					"name": "managers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg5MjQ1OTY3LCJleHAiOjE2ODkyNDY1Njd9.o-QFdWVnueYowgi3sztY-IW2BrpPqBe1RuDwUpWIW_g",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/managers",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"managers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/managers/649972b8445e825c449120e6",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"managers",
+								"649972b8445e825c449120e6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager by id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"surname\": \"Ivanova\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/managers/649972b8445e825c449120e6",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"managers",
+								"649972b8445e825c449120e6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager by id / statistic",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg5MjQ1OTY3LCJleHAiOjE2ODkyNDY1Njd9.o-QFdWVnueYowgi3sztY-IW2BrpPqBe1RuDwUpWIW_g",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/managers/649ad77341d8ccaec858eadc/statistic",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"managers",
+								"649ad77341d8ccaec858eadc",
+								"statistic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "managers / create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ODllZDJkNzlhODJiMWVkNWFlZmQ3YyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg3ODY5MjY4LCJleHAiOjE2ODc4Njk4Njh9.JIH9V5mzaDlha1P06JXhO5bc2F_74UyPnrzT91JZBzE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Kristina\",\n    \"surname\": \"Maximov\",\n    \"email\": \"tatarinkristina2002@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/managers/create",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"managers",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
