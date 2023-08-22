@@ -89,7 +89,8 @@ export class OrderService {
       });
     }
 
-    const totalCount = await this.countOrders();
+    const totalCount = await this.countOrders(where);
+
     const orders = await this.prismaService.order.findMany({
       select: selectFieldsOfOrder,
       skip,
