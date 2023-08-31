@@ -143,7 +143,7 @@ export class OrderController {
   ) {
     return res
       .status(HttpStatus.OK)
-      .json(await this.orderService.editOrderById(orderId, body, user.id));
+      .json(await this.orderService.editOrderById(orderId, body, user));
   }
 
   @ApiParam({ name: 'orderId', required: true })

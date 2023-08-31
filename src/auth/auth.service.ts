@@ -41,8 +41,8 @@ export class AuthService {
 
       if (manager.is_active === false && manager.password === null) {
         throw new HttpException(
-            'You cannot log in because your account is not activated. Please activate your account',
-            HttpStatus.FORBIDDEN,
+          'You cannot log in because your account is not activated. Please activate your account',
+          HttpStatus.FORBIDDEN,
         );
       }
 

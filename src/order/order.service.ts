@@ -137,11 +137,7 @@ export class OrderService {
     return order;
   }
 
-  async editOrderById(
-    orderId: string,
-    orderData: UpdateOrderDto,
-    managerId: string,
-  ) {
+  async editOrderById(orderId: string, orderData: UpdateOrderDto, user: any) {
     const order = await this.getOrderByIdOrEmail(orderId);
     let group;
 
@@ -152,7 +148,7 @@ export class OrderService {
       }
     }
 
-    if (order && order.managerId === null) {
+    if (order && (order.managerId === null || order.managerId === user.id)) {
       const updateData: UpdateOrderDto = {
         name: orderData.name,
         surname: orderData.surname,
@@ -164,7 +160,7 @@ export class OrderService {
         status: orderData.status,
         sum: orderData.sum,
         already_paid: orderData.already_paid,
-        managerId,
+        managerId: user.id,
       };
 
       if (orderData.email) {
@@ -190,6 +186,8 @@ export class OrderService {
         data: updateData,
         select: selectFieldsOfOrder,
       });
+    } else {
+      throw new HttpException('You do not have permission to edit this order', HttpStatus.FORBIDDEN);
     }
   }
 
@@ -200,20 +198,18 @@ export class OrderService {
   ): Promise<Comment | HttpException> {
     const order = await this.checkOrder(orderId);
 
-    if (
-      order &&
-      order.managerId === null &&
-      (order.status === EStatus.NEW || order.status === null)
-    ) {
+    if (order && (order.managerId === null || order.managerId === user.id)) {
       const comment = data.comment;
 
-      await this.editOrderById(
-        orderId,
-        {
-          status: EStatus.IN_WORK,
-        },
-        user.id,
-      );
+      if (order.status === EStatus.NEW || order.status === null) {
+       await this.editOrderById(
+          orderId,
+          {
+            status: EStatus.IN_WORK,
+          },
+          user,
+        );
+      }
 
       return this.prismaService.comment.create({
         data: {
@@ -224,7 +220,7 @@ export class OrderService {
         },
       });
     }
-    throw new HttpException('You can not add comment', HttpStatus.BAD_REQUEST);
+    throw new HttpException('You can not add comment', HttpStatus.FORBIDDEN);
   }
 
   async checkOrder(orderId: string) {
