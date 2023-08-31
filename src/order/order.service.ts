@@ -187,7 +187,10 @@ export class OrderService {
         select: selectFieldsOfOrder,
       });
     } else {
-      throw new HttpException('You do not have permission to edit this order', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        'You do not have permission to edit this order',
+        HttpStatus.FORBIDDEN,
+      );
     }
   }
 
@@ -202,7 +205,7 @@ export class OrderService {
       const comment = data.comment;
 
       if (order.status === EStatus.NEW || order.status === null) {
-       await this.editOrderById(
+        await this.editOrderById(
           orderId,
           {
             status: EStatus.IN_WORK,
