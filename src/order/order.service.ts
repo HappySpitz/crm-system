@@ -153,6 +153,7 @@ export class OrderService {
         name: orderData.name,
         surname: orderData.surname,
         phone: orderData.phone,
+        email: orderData.email,
         age: orderData.age,
         course: orderData.course,
         course_type: orderData.course_type,
@@ -162,20 +163,6 @@ export class OrderService {
         already_paid: orderData.already_paid,
         managerId: user.id,
       };
-
-      if (orderData.email) {
-        const normalizedEmail = orderData.email.toLowerCase();
-        const email = await this.getOrderByIdOrEmail(normalizedEmail);
-
-        if (!email) {
-          updateData.email = normalizedEmail;
-        } else {
-          throw new HttpException(
-            'Email is already in use.',
-            HttpStatus.BAD_REQUEST,
-          );
-        }
-      }
 
       if (group) {
         updateData.group = group.name;
