@@ -76,14 +76,22 @@ export class OrderService {
         if (key === 'age') {
           if (Array.isArray(value)) {
             const ages = value.map((ageStr) => parseInt(ageStr, 10));
-            where[key] = {
-              in: ages,
-            };
+            if (ages.every((age) => typeof age === "number" && !isNaN(age))) {
+              where[key] = {
+                in: ages,
+              };
+            } else {
+              throw new HttpException('Invalid age value', HttpStatus.BAD_REQUEST)
+            }
           } else {
             const age = parseInt(value, 10);
-            where[key] = {
-              equals: age,
-            };
+            if (typeof age === "number" && !isNaN(age)) {
+              where[key] = {
+                equals: age,
+              };
+            } else {
+              throw new HttpException('Invalid age value', HttpStatus.BAD_REQUEST)
+            }
           }
         }
       });
