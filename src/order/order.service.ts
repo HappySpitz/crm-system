@@ -7,13 +7,14 @@ import { OrderEntity } from './order.entity';
 import { EStatus, ICustomPaginated, IStatistic } from './interface';
 import * as moment from 'moment';
 import { isEmail } from 'class-validator';
+import * as xlsx from 'xlsx';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getOrdersList(
-    query?: PaginateQuery,
+    query?: PaginateQuery & { limit?: number}
   ): Promise<ICustomPaginated<OrderEntity>> {
     const { page = 1, limit = 25, sortBy = [['id', 'desc']], filter } = query;
 
@@ -116,6 +117,62 @@ export class OrderService {
       totalCount,
       totalPages,
     };
+  }
+
+  async getOrdersListInExcel (query?: PaginateQuery) {
+    const amountOfOrders = await this.countOrders();
+    const { data } = await this.getOrdersList({...query, limit: amountOfOrders});
+
+    const dataForExcel = data.map(item => ({
+      id: item.id,
+      name: item.name,
+      surname: item.surname,
+      email: item.email,
+      phone: item.phone,
+      age: item.age,
+      course: item.course,
+      course_format: item.course_format,
+      course_type: item.course_type,
+      sum: item.sum,
+      already_paid: item.already_paid,
+      created_at: item.created_at,
+      utm: item.utm,
+      msg: item.msg,
+      status: item.status,
+      group: item.group,
+      manager: item.manager ? item.manager.name : null
+    }));
+
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(dataForExcel);
+
+    const columnAStyle = {
+      font: { bold: true, sz: 14 },
+      alignment: { vertical: 'center', horizontal: 'center' },
+      fill: { fgColor: { rgb: '#FFFF00' } },
+      border: {
+        top: { style: 'thin', color: { rgb: '#000000' } },
+        right: { style: 'thin', color: { rgb: '#000000' } },
+        bottom: { style: 'thin', color: { rgb: '#000000' } },
+        left: { style: 'thin', color: { rgb: '#000000' } },
+      },
+    };
+
+    const rowCount = dataForExcel.length;
+
+    const columnAStart = 1;
+    const columnAEnd = rowCount;
+
+    for (let row = columnAStart; row <= columnAEnd; row++) {
+      const cellAddress = `A${row}`;
+      worksheet[cellAddress] = {...worksheet[cellAddress], s: columnAStyle}
+    }
+
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Orders');
+
+    const fileName = `${new Date().toLocaleDateString()}.xlsx`;
+
+    return xlsx.writeFile(workbook, fileName);
   }
 
   async getOrderById(orderId: string) {

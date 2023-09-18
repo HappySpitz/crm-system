@@ -75,6 +75,33 @@ export class OrderController {
 
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
+  @Get('excel')
+  @ApiQuery({
+    name: 'sortBy',
+    example: 'name:desc',
+    type: String,
+    required: false,
+    description: 'Sort by column and order',
+  })
+  @ApiQuery({
+    name: 'filter.name',
+    example: 'max',
+    type: String,
+    required: false,
+    description: 'Filter by value',
+  })
+  async getOrdersListInExcel(
+      @Req() req: any,
+      @Res() res: any,
+      @Paginate() query?: PaginateQuery,
+  ) {
+    return res
+        .status(HttpStatus.OK)
+        .json(await this.orderService.getOrdersListInExcel(query));
+  }
+
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
   @Get('groups')
   async getGroups(@Req() req: any, @Res() res: any) {
     return res.status(HttpStatus.OK).json(await this.orderService.getGroups());
