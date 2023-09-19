@@ -126,111 +126,105 @@ export class OrderService {
   }
 
   async getOrdersListInExcel(query?: PaginateQuery) {
-    try {
-      const amountOfOrders = await this.countOrders();
-      const { data } = await this.getOrdersList({
-        ...query,
-        limit: amountOfOrders,
-      });
+    const amountOfOrders = await this.countOrders();
+    const { data } = await this.getOrdersList({
+      ...query,
+      limit: amountOfOrders,
+    });
 
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Orders');
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Orders');
 
-      const headerRow = worksheet.addRow([
-        'id',
-        'name',
-        'surname',
-        'email',
-        'phone',
-        'age',
-        'course',
-        'course_format',
-        'course_type',
-        'sum',
-        'already_paid',
-        'created_at',
-        'status',
-        'group',
-        'manager',
-      ]);
+    const headerRow = worksheet.addRow([
+      'id',
+      'name',
+      'surname',
+      'email',
+      'phone',
+      'age',
+      'course',
+      'course_format',
+      'course_type',
+      'sum',
+      'already_paid',
+      'created_at',
+      'status',
+      'group',
+      'manager',
+    ]);
 
-      headerRow.font = {
-        bold: true,
-        size: 14,
-        name: 'Arial',
-        color: { argb: 'FFFFFF' },
+    headerRow.font = {
+      bold: true,
+      size: 14,
+      name: 'Arial',
+      color: { argb: 'FFFFFF' },
+    };
+    headerRow.height = 25;
+    headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '696969' },
       };
-      headerRow.height = 25;
-      headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
-      headerRow.eachCell((cell) => {
-        cell.fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: '696969' },
-        };
 
+      cell.border = {
+        top: { style: 'thin', color: { argb: '#000000' } },
+        right: { style: 'thin', color: { argb: '#000000' } },
+        bottom: { style: 'thin', color: { argb: '#000000' } },
+        left: { style: 'thin', color: { argb: '#000000' } },
+      };
+    });
+
+    data.forEach((order) => {
+      const row = worksheet.addRow([
+        order.id,
+        order.name,
+        order.surname,
+        order.email,
+        order.phone,
+        order.age,
+        order.course,
+        order.course_format,
+        order.course_type,
+        order.sum,
+        order.already_paid,
+        order.created_at,
+        order.status,
+        order.group,
+        order.manager ? order.manager.name : null,
+      ]);
+      row.height = 25;
+
+      for (let columnIndex = 1; columnIndex <= row.cellCount; columnIndex++) {
+        const cell = row.getCell(columnIndex);
+        cell.value = cell.value === null ? '' : cell.value;
+        cell.font = { size: 14, name: 'Arial' };
+        cell.alignment = { vertical: 'middle', horizontal: 'center' };
         cell.border = {
           top: { style: 'thin', color: { argb: '#000000' } },
           right: { style: 'thin', color: { argb: '#000000' } },
           bottom: { style: 'thin', color: { argb: '#000000' } },
           left: { style: 'thin', color: { argb: '#000000' } },
         };
-      });
+      }
+    });
 
-      data.forEach((order) => {
-        const row = worksheet.addRow([
-          order.id,
-          order.name,
-          order.surname,
-          order.email,
-          order.phone,
-          order.age,
-          order.course,
-          order.course_format,
-          order.course_type,
-          order.sum,
-          order.already_paid,
-          order.created_at,
-          order.status,
-          order.group,
-          order.manager ? order.manager.name : null,
-        ]);
-        row.height = 25;
+    const columns = worksheet.columns;
 
-        for (let columnIndex = 1; columnIndex <= row.cellCount; columnIndex++) {
-          const cell = row.getCell(columnIndex);
-          cell.value = cell.value === null ? '' : cell.value;
-          cell.font = { size: 14, name: 'Arial' };
-          cell.alignment = { vertical: 'middle', horizontal: 'center' };
-          cell.border = {
-            top: { style: 'thin', color: { argb: '#000000' } },
-            right: { style: 'thin', color: { argb: '#000000' } },
-            bottom: { style: 'thin', color: { argb: '#000000' } },
-            left: { style: 'thin', color: { argb: '#000000' } },
-          };
+    columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const length = cell.value ? cell.value.toString().length : 0;
+        if (length > maxLength) {
+          maxLength = length;
         }
       });
 
-      const columns = worksheet.columns;
+      column.width = maxLength + 10;
+    });
 
-      columns.forEach((column) => {
-        let maxLength = 0;
-        column.eachCell({ includeEmpty: true }, (cell) => {
-          const length = cell.value ? cell.value.toString().length : 0;
-          if (length > maxLength) {
-            maxLength = length;
-          }
-        });
-
-        column.width = maxLength + 10;
-      });
-
-      workbook.xlsx.writeFile(`${new Date().toLocaleDateString()}.xlsx`);
-
-      return 'File successfully saved.';
-    } catch (e) {
-      throw new HttpException(e.message, e.status);
-    }
+    return workbook.xlsx.writeBuffer();
   }
 
   async getOrderById(orderId: string) {

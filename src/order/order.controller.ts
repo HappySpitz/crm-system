@@ -95,9 +95,9 @@ export class OrderController {
     @Res() res: any,
     @Paginate() query?: PaginateQuery,
   ) {
-    return res
-      .status(HttpStatus.OK)
-      .json(await this.orderService.getOrdersListInExcel(query));
+    res.attachment(`${new Date().toLocaleDateString()}.xlsx`);
+    res.send(await this.orderService.getOrdersListInExcel(query));
+    return res;
   }
 
   @ApiResponse({ status: 200, description: 'OK' })
