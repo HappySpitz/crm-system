@@ -91,13 +91,13 @@ export class OrderController {
     description: 'Filter by value',
   })
   async getOrdersListInExcel(
-      @Req() req: any,
-      @Res() res: any,
-      @Paginate() query?: PaginateQuery,
+    @Req() req: any,
+    @Res() res: any,
+    @Paginate() query?: PaginateQuery,
   ) {
     return res
-        .status(HttpStatus.OK)
-        .json(await this.orderService.getOrdersListInExcel(query));
+      .status(HttpStatus.OK)
+      .json(await this.orderService.getOrdersListInExcel(query));
   }
 
   @ApiResponse({ status: 200, description: 'OK' })

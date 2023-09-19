@@ -7,14 +7,14 @@ import { OrderEntity } from './order.entity';
 import { EStatus, ICustomPaginated, IStatistic } from './interface';
 import * as moment from 'moment';
 import { isEmail } from 'class-validator';
-import * as xlsx from 'xlsx';
+import * as ExcelJS from 'exceljs';
 
 @Injectable()
 export class OrderService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getOrdersList(
-    query?: PaginateQuery & { limit?: number}
+    query?: PaginateQuery & { limit?: number },
   ): Promise<ICustomPaginated<OrderEntity>> {
     const { page = 1, limit = 25, sortBy = [['id', 'desc']], filter } = query;
 
@@ -77,21 +77,27 @@ export class OrderService {
         if (key === 'age') {
           if (Array.isArray(value)) {
             const ages = value.map((ageStr) => parseInt(ageStr, 10));
-            if (ages.every((age) => typeof age === "number" && !isNaN(age))) {
+            if (ages.every((age) => typeof age === 'number' && !isNaN(age))) {
               where[key] = {
                 in: ages,
               };
             } else {
-              throw new HttpException('Invalid age value', HttpStatus.BAD_REQUEST)
+              throw new HttpException(
+                'Invalid age value',
+                HttpStatus.BAD_REQUEST,
+              );
             }
           } else {
             const age = parseInt(value, 10);
-            if (typeof age === "number" && !isNaN(age)) {
+            if (typeof age === 'number' && !isNaN(age)) {
               where[key] = {
                 equals: age,
               };
             } else {
-              throw new HttpException('Invalid age value', HttpStatus.BAD_REQUEST)
+              throw new HttpException(
+                'Invalid age value',
+                HttpStatus.BAD_REQUEST,
+              );
             }
           }
         }
@@ -119,60 +125,112 @@ export class OrderService {
     };
   }
 
-  async getOrdersListInExcel (query?: PaginateQuery) {
-    const amountOfOrders = await this.countOrders();
-    const { data } = await this.getOrdersList({...query, limit: amountOfOrders});
+  async getOrdersListInExcel(query?: PaginateQuery) {
+    try {
+      const amountOfOrders = await this.countOrders();
+      const { data } = await this.getOrdersList({
+        ...query,
+        limit: amountOfOrders,
+      });
 
-    const dataForExcel = data.map(item => ({
-      id: item.id,
-      name: item.name,
-      surname: item.surname,
-      email: item.email,
-      phone: item.phone,
-      age: item.age,
-      course: item.course,
-      course_format: item.course_format,
-      course_type: item.course_type,
-      sum: item.sum,
-      already_paid: item.already_paid,
-      created_at: item.created_at,
-      utm: item.utm,
-      msg: item.msg,
-      status: item.status,
-      group: item.group,
-      manager: item.manager ? item.manager.name : null
-    }));
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Orders');
 
-    const workbook = xlsx.utils.book_new();
-    const worksheet = xlsx.utils.json_to_sheet(dataForExcel);
+      const headerRow = worksheet.addRow([
+        'id',
+        'name',
+        'surname',
+        'email',
+        'phone',
+        'age',
+        'course',
+        'course_format',
+        'course_type',
+        'sum',
+        'already_paid',
+        'created_at',
+        'status',
+        'group',
+        'manager',
+      ]);
 
-    const columnAStyle = {
-      font: { bold: true, sz: 14 },
-      alignment: { vertical: 'center', horizontal: 'center' },
-      fill: { fgColor: { rgb: '#FFFF00' } },
-      border: {
-        top: { style: 'thin', color: { rgb: '#000000' } },
-        right: { style: 'thin', color: { rgb: '#000000' } },
-        bottom: { style: 'thin', color: { rgb: '#000000' } },
-        left: { style: 'thin', color: { rgb: '#000000' } },
-      },
-    };
+      headerRow.font = {
+        bold: true,
+        size: 14,
+        name: 'Arial',
+        color: { argb: 'FFFFFF' },
+      };
+      headerRow.height = 25;
+      headerRow.alignment = { horizontal: 'center', vertical: 'middle' };
+      headerRow.eachCell((cell) => {
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '696969' },
+        };
 
-    const rowCount = dataForExcel.length;
+        cell.border = {
+          top: { style: 'thin', color: { argb: '#000000' } },
+          right: { style: 'thin', color: { argb: '#000000' } },
+          bottom: { style: 'thin', color: { argb: '#000000' } },
+          left: { style: 'thin', color: { argb: '#000000' } },
+        };
+      });
 
-    const columnAStart = 1;
-    const columnAEnd = rowCount;
+      data.forEach((order) => {
+        const row = worksheet.addRow([
+          order.id,
+          order.name,
+          order.surname,
+          order.email,
+          order.phone,
+          order.age,
+          order.course,
+          order.course_format,
+          order.course_type,
+          order.sum,
+          order.already_paid,
+          order.created_at,
+          order.status,
+          order.group,
+          order.manager ? order.manager.name : null,
+        ]);
+        row.height = 25;
 
-    for (let row = columnAStart; row <= columnAEnd; row++) {
-      const cellAddress = `A${row}`;
-      worksheet[cellAddress] = {...worksheet[cellAddress], s: columnAStyle}
+        for (let columnIndex = 1; columnIndex <= row.cellCount; columnIndex++) {
+          const cell = row.getCell(columnIndex);
+          cell.value = cell.value === null ? '' : cell.value;
+          cell.font = { size: 14, name: 'Arial' };
+          cell.alignment = { vertical: 'middle', horizontal: 'center' };
+          cell.border = {
+            top: { style: 'thin', color: { argb: '#000000' } },
+            right: { style: 'thin', color: { argb: '#000000' } },
+            bottom: { style: 'thin', color: { argb: '#000000' } },
+            left: { style: 'thin', color: { argb: '#000000' } },
+          };
+        }
+      });
+
+      const columns = worksheet.columns;
+
+      columns.forEach((column) => {
+        let maxLength = 0;
+        column.eachCell({ includeEmpty: true }, (cell) => {
+          const length = cell.value ? cell.value.toString().length : 0;
+          if (length > maxLength) {
+            maxLength = length;
+          }
+        });
+
+        column.width = maxLength + 10;
+      });
+
+      workbook.xlsx.writeFile(`${new Date().toLocaleDateString()}.xlsx`);
+
+      return 'File successfully saved.';
+    } catch (e) {
+      throw new HttpException(e.message, e.status);
     }
-
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Orders');
-
-    const fileName = `${new Date().toLocaleDateString()}.xlsx`;
-
-    return xlsx.writeFile(workbook, fileName);
   }
 
   async getOrderById(orderId: string) {

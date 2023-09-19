@@ -13,6 +13,16 @@
 				{
 					"name": "orders",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MGNlYTk4ZjljODRkNzU3MWM0NyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjk1MDU3MDQ1LCJleHAiOjE2OTUwNTc2NDV9.DvDHsdzM9o4R9W0mdQHvhB8TLUDHBioSMcH-E8P_-JE",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [
 							{
@@ -22,7 +32,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api}}/orders?filter.manager=Kristina",
+							"raw": "{{api}}/orders?limit=7",
 							"host": [
 								"{{api}}"
 							],
@@ -62,7 +72,93 @@
 								},
 								{
 									"key": "filter.manager",
-									"value": "Kristina"
+									"value": "Kristina",
+									"disabled": true
+								},
+								{
+									"key": "filter.status",
+									"value": "New",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "7"
+								},
+								{
+									"key": "filter.age",
+									"value": "y",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "orders / excel",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MGNlYTk4ZjljODRkNzU3MWM0NyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjk1MTIyNTE5LCJleHAiOjE2OTUxMjMxMTl9.TT8-Nzr1vMaYr32JioZQno7h8Ta_9lvhUD46RPWqFqA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MGNlYTk4ZjljODRkNzU3MWM0NyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjg5MzQ4MDgwLCJleHAiOjE2ODkzNDg2ODB9.JNFdBJq7SPRRPmGiRI9weaDkC9fKS0J5E3pps824e34",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api}}/orders/excel",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"orders",
+								"excel"
+							],
+							"query": [
+								{
+									"key": "filter.course_type",
+									"value": "premium",
+									"disabled": true
+								},
+								{
+									"key": "filter.group",
+									"value": "sep-2023",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "age:desc",
+									"disabled": true
+								},
+								{
+									"key": "filter.name",
+									"value": "jhon",
+									"disabled": true
+								},
+								{
+									"key": "filter.start_date",
+									"value": "2021-01-01",
+									"disabled": true
+								},
+								{
+									"key": "filter.end_date",
+									"value": "2021-12-29",
+									"disabled": true
+								},
+								{
+									"key": "filter.manager",
+									"value": "Kristina",
+									"disabled": true
 								},
 								{
 									"key": "filter.status",
@@ -356,7 +452,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"tatarinkristina2002@gmail.com\",\n    \"password\": \"Password123@\"\n}",
+							"raw": "{\n    \"email\": \"admin@gmail.com\",\n    \"password\": \"admin\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -649,11 +745,21 @@
 				{
 					"name": "manager by id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YjE1MGNlYTk4ZjljODRkNzU3MWM0NyIsInN0cmF0ZWd5IjoiYWNjZXNzIiwiaWF0IjoxNjkyNjI3MzI3LCJleHAiOjE2OTI2Mjc5Mjd9.ZiMFtL5TtJurcYqYNhoNBu5urPQdlYyB6PmMq8i-pGE",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"surname\": \"Ivanova\"\n}",
+							"raw": "{\n    \"surname\": \"Denis\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -661,13 +767,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{api}}/managers/649972b8445e825c449120e6",
+							"raw": "{{api}}/managers/64b6acb76ec3542f5e3d81d2",
 							"host": [
 								"{{api}}"
 							],
 							"path": [
 								"managers",
-								"649972b8445e825c449120e6"
+								"64b6acb76ec3542f5e3d81d2"
 							]
 						}
 					},
