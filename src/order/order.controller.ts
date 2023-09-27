@@ -13,7 +13,7 @@ import {
   HttpStatus,
   Param,
   Patch,
-  Post,
+  Post, Query,
   Req,
   Res,
   UseGuards,
@@ -90,13 +90,21 @@ export class OrderController {
     required: false,
     description: 'Filter by value',
   })
+  @ApiQuery({
+    name: 'useMyOrders',
+    type: Boolean,
+    required: false,
+    description: 'Use My Orders flag',
+  })
   async getOrdersListInExcel(
     @Req() req: any,
     @Res() res: any,
     @Paginate() query?: PaginateQuery,
+    @Query('useMyOrders') useMyOrders: boolean = false,
+    @User() user?: any,
   ) {
     res.attachment(`${new Date().toLocaleDateString()}.xlsx`);
-    res.send(await this.orderService.getOrdersListInExcel(query));
+    res.send(await this.orderService.getOrdersListInExcel(useMyOrders, query, user.id));
     return res;
   }
 
@@ -118,15 +126,44 @@ export class OrderController {
 
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @Get('manager')
-  async getOrdersFromManager(
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    example: '4',
+    required: false,
+    description: 'Page number',
+  })
+  @ApiQuery({
+    name: 'limit',
+    example: '10',
+    type: Number,
+    required: false,
+    description: 'Number of items per page',
+  })
+  @ApiQuery({
+    name: 'sortBy',
+    example: 'name:desc',
+    type: String,
+    required: false,
+    description: 'Sort by column and order',
+  })
+  @ApiQuery({
+    name: 'filter.name',
+    example: 'max',
+    type: String,
+    required: false,
+    description: 'Filter by value',
+  })
+  @Get('my')
+  async getMyOrders(
     @Req() req: any,
     @Res() res: any,
     @User() user: any,
+    @Paginate() query?: PaginateQuery,
   ) {
     return res
       .status(HttpStatus.OK)
-      .json(await this.orderService.getOrdersFromManagerById(user.id));
+      .json(await this.orderService.getMyOrders(user.id, query));
   }
 
   @ApiResponse({ status: 201, description: 'Created' })

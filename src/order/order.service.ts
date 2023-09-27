@@ -8,13 +8,14 @@ import { EStatus, ICustomPaginated, IStatistic } from './interface';
 import * as moment from 'moment';
 import { isEmail } from 'class-validator';
 import * as ExcelJS from 'exceljs';
+import {addWhereCondition} from "nestjs-paginate/lib/filter";
 
 @Injectable()
 export class OrderService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getOrdersList(
-    query?: PaginateQuery & { limit?: number },
+    query?: PaginateQuery & { limit?: number }, managerId?: string
   ): Promise<ICustomPaginated<OrderEntity>> {
     const { page = 1, limit = 25, sortBy = [['id', 'desc']], filter } = query;
 
@@ -62,10 +63,17 @@ export class OrderService {
           key === 'course' ||
           key === 'course_type' ||
           key === 'course_format' ||
-          key === 'status' ||
           key === 'group'
         ) {
           where[key] = { equals: value };
+        }
+
+        if (key === 'status') {
+          if (filter.status === 'New') {
+            where[key] = 'New' && null;
+          } else if (filter.status !== null) {
+            where[key] = { equals: value };
+          }
         }
 
         if (key === 'manager') {
@@ -104,7 +112,11 @@ export class OrderService {
       });
     }
 
-    const totalCount = await this.countOrders(where);
+    if (managerId) {
+      where['managerId'] = managerId;
+    }
+
+    const totalCount = await this.countOrders(where, managerId);
 
     const orders = await this.prismaService.order.findMany({
       select: selectFieldsOfOrder,
@@ -125,12 +137,19 @@ export class OrderService {
     };
   }
 
-  async getOrdersListInExcel(query?: PaginateQuery) {
-    const amountOfOrders = await this.countOrders();
-    const { data } = await this.getOrdersList({
-      ...query,
-      limit: amountOfOrders,
-    });
+  async getOrdersListInExcel(useMyOrders: boolean, query?: PaginateQuery, managerId?: string) {
+    let ordersData;
+    let amountOfOrders;
+
+    if (useMyOrders) {
+      amountOfOrders = await this.countOrders({managerId});
+      const result = await this.getMyOrders(managerId, {...query, limit: amountOfOrders});
+      ordersData = result.data;
+    } else {
+      amountOfOrders = await this.countOrders();
+      const result = await this.getOrdersList({...query, limit: amountOfOrders});
+      ordersData = result.data;
+    }
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Orders');
@@ -176,7 +195,9 @@ export class OrderService {
       };
     });
 
-    data.forEach((order) => {
+    if (Array.isArray(ordersData)) {
+    ordersData.forEach((order) => {
+      const formattedDate = moment(order.created_at).format('DD.MM.YYYY HH:mm');
       const row = worksheet.addRow([
         order.id,
         order.name,
@@ -189,7 +210,7 @@ export class OrderService {
         order.course_type,
         order.sum,
         order.already_paid,
-        order.created_at,
+        order.created_at ? formattedDate : null,
         order.status,
         order.group,
         order.manager ? order.manager.name : null,
@@ -208,7 +229,7 @@ export class OrderService {
           left: { style: 'thin', color: { argb: '#000000' } },
         };
       }
-    });
+    })}
 
     const columns = worksheet.columns;
 
@@ -376,8 +397,12 @@ export class OrderService {
     return this.prismaService.group.findMany();
   }
 
-  async countOrders(argument?: Partial<Order>): Promise<number> {
+  async countOrders(argument?: Partial<Order>, managerId?: string): Promise<number> {
     const where: any = argument ? { ...argument } : {};
+
+    if (managerId) {
+      where.managerId = managerId;
+    }
 
     return this.prismaService.order.count({ where });
   }
@@ -400,10 +425,7 @@ export class OrderService {
     };
   }
 
-  async getOrdersFromManagerById(managerId: string) {
-    return this.prismaService.order.findMany({
-      where: { managerId },
-      select: selectFieldsOfOrder,
-    });
+  async getMyOrders(managerId: string, query?: PaginateQuery) {
+    return this.getOrdersList(query, managerId);
   }
 }
